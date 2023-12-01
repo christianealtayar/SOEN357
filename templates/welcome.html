@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='welcome.css') }}">
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <title>Welcome - VibeSync</title>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="navbar navbar-expand-md navbar-dark btn-beige fixed-top navbar-light">
+                <a class="navbar-brand" style="color: #000; font-family: 'Pacifico', cursive;" href="#">VibeSync</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active mr-4">
+                            <a class="nav-link text-dark" href="#" data-toggle="modal" data-target="#addEventModal">
+                                <span data-feather="plus"></span>
+                                Add Event
+                            </a>
+                        </li>
+                        <li class="nav-item mr-3">
+                            <a class="nav-link text-dark" href="#" data-toggle="modal" data-target="#syncModal">
+                                <span data-feather="refresh-cw"></span>
+                                Sync
+                            </a>
+                        </li>
+                        <li class="nav-item mr-2">
+                            <a class="nav-link text-dark" href="#">
+                                <span data-feather="user"></span>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('sign_out') }}">
+                                <span data-feather="log-out"></span>
+                                Sign Out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="modal fade" id="syncModal" tabindex="-1" role="dialog" aria-labelledby="syncModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="syncModalLabel">Sync</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Invite Friends</label>
+                                    <ul>
+                                        <li><button class="btn btn-link" onclick="inviteFriend('Shivam')">Shivam</button></li>
+                                        <li><button class="btn btn-link" onclick="inviteFriend('Elion')">Elion</button></li>
+                                        <li><button class="btn btn-link" onclick="inviteFriend('Theodore')">Theodore</button></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6 border-left">
+                                    <label>Sync with:</label>
+                                    <ul>
+                                        <li><button class="btn btn-link" onclick="populateFakeDataForYoseph()">Yoseph</button></li>
+                                        <li><button class="btn btn-link" onclick="syncWith('Mehdi')">Mehdi</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="eventForm">
+                                <div class="form-group">
+                                    <label for="eventTitle">Title</label>
+                                    <input type="text" class="form-control" id="eventTitle" placeholder="Event Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventLocation">Location</label>
+                                    <input type="text" class="form-control" id="eventLocation" placeholder="Event Location">
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="allDayToggle">
+                                    <label class="form-check-label" for="allDayToggle">All-day Event</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventStarts">Starts</label>
+                                    <input type="datetime-local" class="form-control" id="eventStarts">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventEnds">Ends</label>
+                                    <input type="datetime-local" class="form-control" id="eventEnds">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eventRepeat">Repeat</label>
+                                    <select class="form-control" id="eventRepeat">
+                                        <option>No Repeat</option>
+                                        <option>Daily</option>
+                                        <option>Weekly</option>
+                                        <option>Monthly</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="saveEvent()">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 custom-margin-top" style="margin-left: auto; margin-right: auto;">
+                <div id="calendar"></div>
+            </main>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script>
+        feather.replace();
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'agendaWeek',
+                defaultDate: '2023-12-01',
+                editable: true,
+                events: [
+                    { title: 'Doctor', start: '2023-12-01T10:00:00', end: '2023-12-01T12:00:00', allDay: false },
+                    { title: 'Work', start: '2023-11-27T09:00:00', end: '2023-11-27T17:00:00', allDay: false },
+                    { title: 'Work', start: '2023-11-28T09:00:00', end: '2023-11-28T17:00:00', allDay: false },
+                    { title: 'Work', start: '2023-11-29T09:00:00', end: '2023-11-29T17:00:00', allDay: false },
+                    { title: 'Work', start: '2023-11-30T09:00:00', end: '2023-11-30T17:00:00', allDay: false },
+                    { title: 'Work', start: '2023-12-01T09:00:00', end: '2023-12-01T17:00:00', allDay: false }
+                ],
+                eventRender: function (event, element) {
+                    if (event.color) {
+                        element.css('background-color', event.color);
+                        element.css('border-color', event.color);
+                    }
+                }
+            });
+        });
+
+        function inviteFriend(name) {
+            console.log('Inviting friend:', name);
+        }
+
+        function syncWith(name) {
+            console.log('Syncing with:', name);
+        }
+
+        function populateFakeDataForYoseph() {
+            $('#calendar').fullCalendar('renderEvent', {
+                title: 'Yoseph\'s Snowboarding',
+                start: '2023-12-01T09:00:00',
+                end: '2023-12-01T19:00:00',
+                allDay: false,
+                color: '#FF5733'
+            }, true);
+
+            $('#calendar').fullCalendar('renderEvent', {
+                title: 'Yoseph\'s Breakfast',
+                start: '2023-12-02T09:00:00',
+                end: '2023-12-02T10:00:00',
+                allDay: false,
+                color: '#FF5733'
+            }, true);
+
+            $('#syncModal').modal('hide');
+
+            setTimeout(function () {
+                alert("Before this week ends, Yoseph is available on Saturday after 10 AM!");
+            }, 1000);
+        }
+
+        function saveEvent() {
+            var eventTitle = $("#eventTitle").val();
+            var eventLocation = $("#eventLocation").val();
+            var allDay = $("#allDayToggle").is(":checked");
+            var eventStarts = $("#eventStarts").val();
+            var eventEnds = $("#eventEnds").val();
+            var eventRepeat = $("#eventRepeat").val();
+
+            var eventData = {
+                title: eventTitle,
+                start: eventStarts,
+                end: eventEnds,
+                allDay: allDay,
+                location: eventLocation,
+                repeat: eventRepeat
+            };
+
+            $('#calendar').fullCalendar('renderEvent', eventData, true);
+            $('#addEventModal').modal('hide');
+        }
+    </script>
+
+</body>
+
+</html>

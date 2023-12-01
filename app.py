@@ -16,7 +16,7 @@ def login():
     password = request.form.get('password')
 
     if email == correct_email and password == correct_password:
-        # Successful login, redirect to a welcome page or home page
+        # Successful login, redirect to the welcome page
         return redirect(url_for('welcome'))
     else:
         # Failed login, show an error message
@@ -25,7 +25,12 @@ def login():
 
 @app.route('/welcome')
 def welcome():
-    return "Welcome to the website!"
+    return render_template('welcome.html')
+
+@app.route('/sign_out')
+def sign_out():
+    # Add any sign-out logic here if needed
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

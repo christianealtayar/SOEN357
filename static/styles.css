@@ -5,3 +5,17 @@ body {
 .card {
     margin-top: 50px;
 }
+.btn-beige {
+    background-color: #d2b48c;
+    color: #000; 
+}
+
+.create-account-link {
+    text-decoration: underline;
+    color: #000
+}
+
+.custom-margin-top {
+    margin-top: 100px; 
+}
+
